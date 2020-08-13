@@ -1,18 +1,17 @@
-
 version: '2'
 services:
   mariadb:
     image: mariadb:latest
     environment:
       #- ALLOW_EMPTY_PASSWORD=yes
-      - MYSQL_DATABASE=bitnami_moodle
-      - MYSQL_ROOT_PASSWORD=rootpass
-      - MYSQL_USER=bn_moodle
-      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=my_moodle
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     volumes:
       - ./data/mariadb_data:/var/lib/mysql:Z
-      
+
   moodle:
     image: docker.io/bitnami/moodle:3-debian-10
     ports:
@@ -21,17 +20,31 @@ services:
     environment:
       - MOODLE_DATABASE_HOST=mariadb
       - MOODLE_DATABASE_PORT_NUMBER=3306
-      - MOODLE_DATABASE_USER=bn_moodle
-      - MOODLE_DATABASE_NAME=bitnami_moodle
-      - MOODLE_DATABASE_PASSWORD=123456
+      - MOODLE_DATABASE_USER=admin
+      - MOODLE_DATABASE_NAME=my_moodle
+      - MOODLE_DATABASE_PASSWORD=admin
         # MOODLE SETTINGS
       - MOODLE_USERNAME=user
       - MOODLE_PASSWORD=bitnami
       - MOODLE_EMAIL=user@example.com
-      - MOODLE_SITE_NAME='New Site'
+      - MOODLE_SITE_NAME='My LMS'
       #- ALLOW_EMPTY_PASSWORD=yes
     volumes:
       - ./data/moodle_data:/bitnami/moodle:Z
       - ./data/moodledata_data:/bitnami/moodledata:Z
     depends_on:
       - mariadb
+
+  phpmyadmin:
+    depends_on:
+      - mariadb
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8081:80'
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_PASSWORD: admin
+
+
