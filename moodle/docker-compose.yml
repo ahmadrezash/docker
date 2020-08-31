@@ -1,3 +1,4 @@
+
 version: '2'
 services:
   mariadb:
@@ -11,7 +12,7 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     volumes:
       - ./data/mariadb_data:/var/lib/mysql:Z
-
+      
   moodle:
     image: docker.io/bitnami/moodle:3-debian-10
     ports:
@@ -41,10 +42,8 @@ services:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - '8081:80'
+      - 8081:80
     environment:
       PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_PASSWORD: admin
-
-
